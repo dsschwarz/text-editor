@@ -10,13 +10,13 @@ public:
 	void insertChar(int keyCode);
 	void removeChar();
 	void handleEvents(sf::Event event);
-
+	void drawCursor(sf::RenderWindow* win);
+	void moveCursor(char dir);
 	sf::Window* window;
 	std::vector<int>* charArray;
 
 private:
 	//cursor position
-	int row;
-	int column;
+	int c_position;
 };
 #endif

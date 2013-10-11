@@ -17,22 +17,29 @@ sf::Sprite getSprite(int imageNum) {
 	sprite.setPosition(col * 20, row * 20);
 	return sprite;
 }
-void drawWindow(sf::RenderWindow* window) {
+void renderChars(sf::RenderWindow* window) {
 
 	row = 0;
 	col = 0;
-	for(auto& x: charArray) {
+	for (int i = 0; i < charArray.size(); ++i)
+	{
+		int x = charArray[i];
 		window->draw(getSprite(x));
-		row ++;
-		if(row > 20) {
-			row = 0;
-			col ++;
+
+		// If character is NOT a consonant followed by a vowel, advace one space
+		if(!((x > hlp::FIRST_CONS) && (i+1 < charArray.size()) && (charArray[i+1] < hlp::FIRST_CONS))) {
+			row ++;
+			if(row >= 20) {
+				row = 0;
+				col ++;
+			}
 		}
 	}
 }
 
 int main() {
 	hlp::loadImages();
+	hlp::outputKeyMapping();
 	sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Text Editor");
 	KeyHandler keyHandler(&window, &charArray);
 
@@ -44,7 +51,8 @@ int main() {
 		while(window.waitEvent(event)) {
 			keyHandler.handleEvents(event);
 			window.clear();
-			drawWindow(&window);
+			renderChars(&window);
+			keyHandler.drawCursor(&window);
 			window.display();
 		}
 
